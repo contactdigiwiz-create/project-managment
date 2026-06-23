@@ -1,14 +1,11 @@
-import { useState, useEffect } from "react";
-import { LogIn, Coffee } from "lucide-react";
-import { useAuth } from "../context/AuthContext";
-import { useShift } from "../hooks/useShift";
-import StatCard from "../components/ui/StatCard";
-import api from "../api/axios";
-
-// Helper utilities to handle string-to-time additions
+// Bulletproof converter that strips out any extra hidden characters/spaces
 const timeToSeconds = (timeStr) => {
-  if (!timeStr || typeof timeStr !== "string" || timeStr === "--:--:--") return 0;
-  const parts = timeStr.split(":");
+  if (!timeStr || typeof timeStr !== "string" || timeStr.includes("-")) return 0;
+  // Clean string to only digits and colons
+  const cleanStr = timeStr.replace(/[^0-9:]/g, "");
+  const parts = cleanStr.split(":");
+  if (parts.length < 2) return 0;
+  
   const hrs = parseInt(parts[0], 10) || 0;
   const mins = parseInt(parts[1], 10) || 0;
   const secs = parseInt(parts[2], 10) || 0;
@@ -51,7 +48,6 @@ const Dashboard = () => {
 
   useEffect(() => {
     fetchDashboard();
-    // Refresh activities every 10 seconds
     const interval = setInterval(fetchDashboard, 10000);
     return () => clearInterval(interval);
   }, []);
@@ -73,6 +69,22 @@ const Dashboard = () => {
     }
     fetchDashboard();
   };
+
+  const clockOutTime = dashboard?.shift?.clockOutTime
+    ? new Date(dashboard.shift.clockOutTime).toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+      })
+    : "--:--:--";
+
+  // MATH FOR COMBINED ACTIVE HOURS
+  const activeSeconds = timeToSeconds(activeTime);
+  const breakSeconds = timeToSeconds(breakTime);
+  const combinedActiveHours = formatFromSeconds(activeSeconds + breakSeconds);
+  
+  // Debug to verify calculations in your browser console log
+  console.log("Calculated values:", { activeTime, breakTime, combinedActiveHours });
 
   // Format clock out time from today's ended shift
   const clockOutTime = dashboard?.shift?.clockOutTime
