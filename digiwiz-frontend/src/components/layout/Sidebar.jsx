@@ -23,7 +23,7 @@ const Sidebar = () => {
   return (
     <aside className="sidebar">
       <div className="sidebar-logo">
-        <div className="logo-icon"><img src="./images/logo.png" alt="" />
+        <div className="logo-icon"><img alt="src" src="/images/logo.png" />
         </div>
       </div>
 
