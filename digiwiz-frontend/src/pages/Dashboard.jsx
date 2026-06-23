@@ -124,3 +124,63 @@ const Dashboard = () => {
           subtitle={`+${dashboard?.projects?.newThisWeek ?? 0} new this week`}
         />
         <StatCard
+          title="Pending tasks"
+          value={dashboard?.tasks?.pending ?? 0}
+          subtitle={`+${dashboard?.tasks?.completedToday ?? 0} completed today`}
+        />
+        <StatCard
+          title="Today's tasks"
+          value={dashboard?.tasks?.today ?? 0}
+          subtitle="+1 today"
+        />
+        <StatCard
+          title="Your active hours today"
+          value={combinedActiveHours}
+          subtitle={`${breakTime} break time today`}
+          large
+        />
+        <StatCard
+          title="Log in time"
+          value={clockInTime}
+          large
+        />
+        <StatCard
+          title="Log out time"
+          value={clockOutTime}
+          large
+        />
+        <StatCard
+          title="Today's total working hour"
+          value={activeTime}
+          large
+        />
+        <StatCard
+          title="Today's total break hour"
+          value={breakTime}
+          large
+        />
+      </div>
+
+      {/* Bottom Section */}
+      <div className="dashboard__bottom">
+        <div className="recent-activities">
+          <h3>Recent Activities</h3>
+          <div className="activity-list">
+            {activities.length === 0 ? (
+              <p className="activity-empty">No recent activities</p>
+            ) : (
+              activities.map((a) => (
+                <div key={a._id} className="activity-item">
+                  <span className="activity-dot" />
+                  <span>{a.label}</span>
+                </div>
+              ))
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Dashboard;
